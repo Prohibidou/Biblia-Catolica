@@ -1,0 +1,30 @@
+node_modules
+dist
+.env
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Scripts temporales
+scripts/*.txt
+scripts/*.pdf
+scripts/*.doc
+scripts/*.docx
+scripts/Sagrada_Biblia_Navarra_full.txt
+scripts/raw_books/
+scripts/*_extracted*.json
+scripts/*_temp*.json
+scripts/book_map*.json
+
+# Archivos grandes innecesarios
+BibliaPDF/
