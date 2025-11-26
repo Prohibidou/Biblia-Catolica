@@ -4,6 +4,7 @@ import { BibleService } from './services/BibleService';
 import type { Verse } from './models/Verse';
 import { BIBLE_BOOKS } from './constants/BibleBooks';
 import { BookSelector } from './components/BookSelector';
+import { CommentsSection } from './components/CommentsSection';
 import { makeReferencesClickable, attachReferenceHandlers, type BibleReference } from './utils/bibleReferences';
 
 // Singleton instance
