@@ -3,7 +3,7 @@ import './App.css';
 import { BibleService } from './services/BibleService';
 import type { Verse } from './models/Verse';
 import { BIBLE_BOOKS } from './constants/BibleBooks';
-import { CommentsSection } from './components/CommentsSection';
+import { BookSelector } from './components/BookSelector';
 import { makeReferencesClickable, attachReferenceHandlers, type BibleReference } from './utils/bibleReferences';
 
 // Singleton instance
@@ -114,59 +114,93 @@ function App() {
     ? verses.filter(v => v.comment).map(v => `${v.verse}. ${v.comment}`)
     : [];
 
+  // Scroll detection for hiding controls
+  const [showControls, setShowControls] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Hide if scrolling down and past the top area (e.g. 100px)
+      // Show if scrolling up
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setShowControls(false);
+      } else {
+        setShowControls(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="container">
-      <header className="app-header">
-        <h1>📖 Biblia Católica</h1>
+      <header className={`app-header ${showControls ? '' : 'header-hidden'}`}>
+        <h1>Biblia Católica</h1>
       </header>
 
-      <div className="controls-panel">
+      <div className="hero-section">
+        <h2 className="hero-title">Lee, estudia y comparte la Palabra de Dios</h2>
+        <p className="hero-subtitle">La herramienta de estudio bíblico católica más completa en línea</p>
+      </div>
+
+      <div className={`controls-panel ${showControls ? '' : 'controls-hidden'}`}>
         {/* Top Row: Version */}
         <div className="control-row">
-          <select
-            value={selectedVersion}
-            onChange={(e) => handleVersionChange(e.target.value)}
-            disabled={loading}
-            className="version-select"
-          >
-            {versions.map(v => (
-              <option key={v.id} value={v.id}>{v.name}</option>
-            ))}
-          </select>
+          <div className="version-select-wrapper">
+            <label className="control-label">Versión de la Biblia</label>
+            <select
+              value={selectedVersion}
+              onChange={(e) => handleVersionChange(e.target.value)}
+              disabled={loading}
+              className="version-select"
+            >
+              {versions.map(v => (
+                <option key={v.id} value={v.id}>{v.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Bottom Row: Navigation (Book, Chapter, Verse) */}
         <div className="control-row navigation-row">
-          <select
-            value={selectedBook}
-            onChange={(e) => handleBookChange(e.target.value)}
-            disabled={loading}
-          >
-            {BIBLE_BOOKS.map(b => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </select>
+          <div>
+            <BookSelector
+              selectedBook={selectedBook}
+              onSelectBook={handleBookChange}
+              disabled={loading}
+            />
+          </div>
 
-          <select
-            value={selectedChapter}
-            onChange={(e) => handleChapterChange(Number(e.target.value))}
-            disabled={loading}
-          >
-            {Array.from({ length: totalChapters }, (_, i) => i + 1).map(num => (
-              <option key={num} value={num}>Capítulo {num}</option>
-            ))}
-          </select>
+          <div>
+            <label className="control-label">Capítulo</label>
+            <select
+              value={selectedChapter}
+              onChange={(e) => handleChapterChange(Number(e.target.value))}
+              disabled={loading}
+            >
+              {Array.from({ length: totalChapters }, (_, i) => i + 1).map(num => (
+                <option key={num} value={num}>Capítulo {num}</option>
+              ))}
+            </select>
+          </div>
 
-          <select
-            value={selectedVerse || ''}
-            onChange={(e) => handleVerseSelect(Number(e.target.value))}
-            disabled={loading || verses.length === 0}
-          >
-            <option value="">Ir a verso...</option>
-            {verses.map(v => (
-              <option key={v.verse} value={v.verse}>Verso {v.verse}</option>
-            ))}
-          </select>
+          <div>
+            <label className="control-label">Versículo</label>
+            <select
+              value={selectedVerse || ''}
+              onChange={(e) => handleVerseSelect(Number(e.target.value))}
+              disabled={loading || verses.length === 0}
+            >
+              <option value="">Ir a verso...</option>
+              {verses.map(v => (
+                <option key={v.verse} value={v.verse}>Verso {v.verse}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -223,6 +257,24 @@ function App() {
           </>
         )}
       </main>
+
+      <footer style={{
+        background: '#002a3e',
+        color: 'white',
+        padding: '3rem 1rem',
+        textAlign: 'center',
+        marginTop: 'auto'
+      }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <p style={{ marginBottom: '1rem', opacity: 0.8 }}>© 2025 Biblia Católica. Todos los derechos reservados.</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+            <a href="#" style={{ color: 'white', textDecoration: 'none', opacity: 0.7 }}>Acerca de</a>
+            <a href="#" style={{ color: 'white', textDecoration: 'none', opacity: 0.7 }}>Ayuda</a>
+            <a href="#" style={{ color: 'white', textDecoration: 'none', opacity: 0.7 }}>Privacidad</a>
+            <a href="#" style={{ color: 'white', textDecoration: 'none', opacity: 0.7 }}>Términos</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

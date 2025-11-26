@@ -1,0 +1,114 @@
+.book-selector-container {
+    position: relative;
+    width: 100%;
+}
+
+.book-selector-button {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border: 1px solid #e1e4e8;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.book-selector-button:hover {
+    border-color: #0096d6;
+}
+
+.dropdown-arrow {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.book-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: flex;
+    width: 600px;
+    /* Wide enough for two columns */
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive: On small screens, stack columns and fit width */
+@media (max-width: 768px) {
+    .book-dropdown-menu {
+        width: 90vw;
+        flex-direction: column;
+        left: 50%;
+        transform: translateX(-50%);
+        position: fixed;
+        top: 20%;
+        max-height: 60vh;
+    }
+}
+
+.testament-column {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.testament-column:first-child {
+    border-right: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+    .testament-column:first-child {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.testament-title {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.books-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.book-option {
+    padding: 0.4rem 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #444;
+    font-size: 0.95rem;
+    transition: background 0.1s;
+}
+
+.book-option:hover {
+    background-color: #f0f7ff;
+    color: #006ba6;
+    font-weight: 600;
+}
+
+.book-option.selected {
+    background-color: #e6f3fa;
+    color: #003d5c;
+    font-weight: 700;
+}

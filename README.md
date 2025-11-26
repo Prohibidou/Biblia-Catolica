@@ -25,3 +25,6 @@ PDF: https://drive.google.com/file/d/1r0HUELJztDNZIPypfOUKKF87nkCIM0tU/view
 - New Testament: 7,906 verses, 679 comments
 
 Last updated: 2025-11-26
+
+## Mejoras Futuras
+- **UX del Buscador:** Mejorar la experiencia de usuario del buscador de libros y capítulos. La implementación actual puede ser confusa. El objetivo es replicar la experiencia fluida de [BibleGateway.com](https://www.biblegateway.com/), posiblemente integrando un buscador de texto predictivo o un selector más intuitivo.
