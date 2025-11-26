@@ -9,7 +9,7 @@ TEXT_FILE = "scripts/navarra_v4_complete.json"
 COMMENTS_FILE = "scripts/navarra_comments.json"
 OUTPUT_FILE = "scripts/navarra_final_merged.json"
 
-# Mapeo de códigos de comentarios a códigos de libro estándar
+# Mapping of comment codes to standard book codes
 COMMENT_BOOK_MAP = {
     'Gn': 'GEN', 'Ex': 'EXO', 'Lv': 'LEV', 'Nm': 'NUM', 'Dt': 'DEU',
     'Jos': 'JOS', 'Jc': 'JDG', 'Rt': 'RUT', '1 S': '1SA', '2 S': '2SA',
@@ -31,14 +31,14 @@ COMMENT_BOOK_MAP = {
 
 def parse_range(ref_str):
     """
-    Parsea rangos como: "1,1-5", "1,1", "12,1-16,27"
-    Devuelve lista de (cap, vers)
+    Parses ranges like: "1,1-5", "1,1", "12,1-16,27"
+    Returns list of (ch, vs)
     """
-    # Simplificación: extraer capítulo inicial y versículo inicial
-    # El soporte completo de rangos complejos es difícil sin saber cuántos versículos tiene cada capítulo
+    # Simplification: extract initial chapter and initial verse
+    # Full support for complex ranges is difficult without knowing how many verses each chapter has
     
     try:
-        # Formato estándar: Cap,Vers-Vers
+        # Standard format: Ch,Vs-Vs
         if ',' in ref_str:
             parts = ref_str.split(',')
             chapter = int(parts[0].strip())
@@ -51,29 +51,29 @@ def parse_range(ref_str):
             else:
                 return chapter, int(verses_part)
         else:
-            # Solo capítulo?
+            # Chapter only?
             return int(ref_str), 1
     except:
         return None, None
 
 def merge():
-    print("Cargando textos...")
+    print("Loading texts...")
     with open(TEXT_FILE, 'r', encoding='utf-8') as f:
         data = json.load(f)
         verses = data['data']
         
-    print("Cargando comentarios...")
+    print("Loading comments...")
     with open(COMMENTS_FILE, 'r', encoding='utf-8') as f:
         comments = json.load(f)
         
-    # Indexar versículos para búsqueda rápida
+    # Index verses for fast lookup
     # Key: BOOK_CAP_VERS
     verse_map = {}
     for v in verses:
         key = f"{v['book']}_{v['chapter']}_{v['verse']}"
         verse_map[key] = v
         
-    print(f"Procesando {len(comments)} comentarios...")
+    print(f"Processing {len(comments)} comments...")
     matched = 0
     
     for c in comments:
@@ -81,15 +81,15 @@ def merge():
         ref = c['reference']
         text = c['text']
         
-        # Mapear libro
+        # Map book
         if book_code_raw in COMMENT_BOOK_MAP:
             book = COMMENT_BOOK_MAP[book_code_raw]
             
-            # Parsear referencia
+            # Parse reference
             chapter, verse_start = parse_range(ref)
             
             if chapter and verse_start:
-                # Asignar al versículo inicial
+                # Assign to initial verse
                 key = f"{book}_{chapter}_{verse_start}"
                 if key in verse_map:
                     v = verse_map[key]
@@ -99,12 +99,12 @@ def merge():
                         v['comment'] = text
                     matched += 1
                 else:
-                    # print(f"No encontrado: {key}")
+                    # print(f"Not found: {key}")
                     pass
             
-    print(f"✅ Comentarios asignados: {matched}")
+    print(f"✅ Comments assigned: {matched}")
     
-    print(f"💾 Guardando {OUTPUT_FILE}...")
+    print(f"💾 Saving {OUTPUT_FILE}...")
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 

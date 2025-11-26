@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Extractor de Comentarios para Sagrada Biblia Navarra
-Busca bloques "COMENTARIO" y extrae referencias y texto.
+Comment Extractor for Sagrada Biblia Navarra
+Searches for "COMENTARIO" blocks and extracts references and text.
 """
 import PyPDF2
 import re
@@ -11,7 +11,7 @@ PDF_FILE = "BibliaPDF/Sagrada Biblia Navarra.pdf"
 OUTPUT_JSON = "scripts/navarra_comments.json"
 
 def extract_comments():
-    print(f"📖 Extrayendo Comentarios de: {PDF_FILE}")
+    print(f"📖 Extracting Comments from: {PDF_FILE}")
     
     comments = []
     current_comment = None
@@ -20,12 +20,12 @@ def extract_comments():
         reader = PyPDF2.PdfReader(f)
         total_pages = len(reader.pages)
         
-        # Empezar a buscar desde donde sabemos que hay comentarios
-        # Génesis empieza aprox en 3950
-        # Pero escaneamos todo por si acaso
+        # Start searching from where we know there are comments
+        # Genesis starts approx at page 3950
+        # But we scan everything just in case
         
         for i in range(3000, total_pages):
-            if i % 500 == 0: print(f"   Escaneando página {i}...")
+            if i % 500 == 0: print(f"   Scanning page {i}...")
             
             text = reader.pages[i].extract_text()
             if not text: continue
@@ -36,9 +36,9 @@ def extract_comments():
                 line = line.strip()
                 if not line: continue
                 
-                # Detectar inicio de comentario
+                # Detect comment start
                 if line == "COMENTARIO" or line == "COMENTARIOS":
-                    # Guardar anterior si existe
+                    # Save previous if exists
                     if current_comment:
                         comments.append(current_comment)
                     
@@ -49,40 +49,40 @@ def extract_comments():
                     }
                     continue
                 
-                # Si estamos dentro de un comentario
+                # If we're inside a comment
                 if current_comment:
-                    # La primera línea después de COMENTARIO suele ser la referencia
+                    # First line after COMENTARIO is usually the reference
                     if not current_comment['ref_raw']:
-                        # Validar si parece referencia (tiene números)
+                        # Validate if it looks like a reference (has numbers)
                         if any(c.isdigit() for c in line):
                             current_comment['ref_raw'] = line
                         else:
-                            # A veces hay líneas intermedias?
+                            # Sometimes there are intermediate lines?
                             pass
                     else:
-                        # Acumular texto
-                        # Ignorar "Volver a..."
+                        # Accumulate text
+                        # Ignore "Volver a..."
                         if "Volver a" in line:
                             continue
                         current_comment['text'].append(line)
 
-    # Guardar último
+    # Save last comment
     if current_comment:
         comments.append(current_comment)
         
-    print(f"✅ Extraídos {len(comments)} comentarios")
+    print(f"✅ Extracted {len(comments)} comments")
     
-    # Procesar referencias
+    # Process references
     processed_comments = []
     for c in comments:
         ref = c['ref_raw']
         text = " ".join(c['text']).strip()
         
-        # Intentar extraer libro, cap, vers
-        # Ej: "Gn 1,1-5", "Mt 21,28-46", "1 Co 7,39-40"
+        # Try to extract book, ch, vs
+        # Ex: "Gn 1,1-5", "Mt 21,28-46", "1 Co 7,39-40"
         
-        # Separar libro de números
-        # Buscar el primer dígito
+        # Separate book from numbers
+        # Find first digit
         match = re.search(r'\d', ref)
         if match:
             idx = match.start()
@@ -95,7 +95,7 @@ def extract_comments():
                 'text': text
             })
             
-    print(f"💾 Guardando en {OUTPUT_JSON}...")
+    print(f"💾 Saving to {OUTPUT_JSON}...")
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(processed_comments, f, ensure_ascii=False, indent=2)
 
