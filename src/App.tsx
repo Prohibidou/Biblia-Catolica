@@ -111,10 +111,68 @@ function App() {
 
   // Extract comments from verses (only for Navarra and Straubinger)
   const hasComments = selectedVersion.includes('navarra') || selectedVersion === 'straubinger';
+
+  // Group consecutive duplicate comments
   const chapterComments = hasComments
-    ? verses
-      .filter(v => v.comment)
-      .map(v => ({ verse: v.verse, text: v.comment as string }))
+    ? (() => {
+      const versesWithComments = verses.filter(v => v.comment);
+      // First, flatten comments: if a verse has multiple comments separated by <br><br>, create separate entries
+      const flatComments: Array<{ verse: number; text: string; originalIndex: number }> = [];
+
+      versesWithComments.forEach(v => {
+        const text = v.comment as string;
+        const parts = text.split('<br><br>');
+        parts.forEach((part, idx) => {
+          if (part.trim()) {
+            flatComments.push({
+              verse: v.verse,
+              text: part.trim(),
+              originalIndex: idx
+            });
+          }
+        });
+      });
+
+      const grouped: Array<{ verseStart: number; verseEnd: number; text: string; id: string }> = [];
+
+      // Group by text content
+      const processed = new Set<string>();
+
+      flatComments.forEach((item, i) => {
+        const key = `${item.verse}-${item.originalIndex}`;
+        if (processed.has(key)) return;
+
+        // Start a new group
+        let start = item.verse;
+        let end = item.verse;
+        const text = item.text;
+        const idx = item.originalIndex;
+
+        processed.add(key);
+
+        // Look ahead for consecutive verses with same text at same index
+        let nextVerse = start + 1;
+        while (true) {
+          const nextItem = flatComments.find(fc => fc.verse === nextVerse && fc.text === text && fc.originalIndex === idx);
+          if (nextItem) {
+            end = nextVerse;
+            processed.add(`${nextVerse}-${idx}`);
+            nextVerse++;
+          } else {
+            break;
+          }
+        }
+
+        grouped.push({
+          verseStart: start,
+          verseEnd: end,
+          text: text,
+          id: `comment-${start}-${idx}`
+        });
+      });
+
+      return grouped.sort((a, b) => a.verseStart - b.verseStart);
+    })()
     : [];
 
   // Scroll detection for hiding controls
@@ -222,32 +280,39 @@ function App() {
                 </div>
 
                 <div className="verses-list" ref={versesContainerRef}>
-                  {verses.map((v, i) => (
-                    <div key={i} id={`verse-${v.verse}`} className={selectedVerse === v.verse ? 'highlighted verse-block' : 'verse-block'}>
-                      <p className="verse-content">
-                        <sup className="verse-num">{v.verse}</sup>
-                        {v.text}
-                        {v.comment && hasComments && (
-                          <a
-                            href={`#comment-${v.verse}`}
-                            className="comment-marker"
-                            title="Ver comentario"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              const el = document.getElementById(`comment-${v.verse}`);
-                              if (el) {
-                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                el.classList.add('highlight-temp');
-                                setTimeout(() => el.classList.remove('highlight-temp'), 2000);
-                              }
-                            }}
-                          >
-                            [*]
-                          </a>
-                        )}
-                      </p>
-                    </div>
-                  ))}
+                  {verses.map((v, i) => {
+                    // Find the comment group ID that covers this verse
+                    const commentId = hasComments
+                      ? chapterComments.find(c => v.verse >= c.verseStart && v.verse <= c.verseEnd)?.id
+                      : null;
+
+                    return (
+                      <div key={i} id={`verse-${v.verse}`} className={selectedVerse === v.verse ? 'highlighted verse-block' : 'verse-block'}>
+                        <p className="verse-content">
+                          <sup className="verse-num">{v.verse}</sup>
+                          {v.text}
+                          {v.comment && hasComments && commentId && (
+                            <a
+                              href={`#${commentId}`}
+                              className="comment-marker"
+                              title="Ver comentario"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const el = document.getElementById(commentId);
+                                if (el) {
+                                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                  el.classList.add('highlight-temp');
+                                  setTimeout(() => el.classList.remove('highlight-temp'), 2000);
+                                }
+                              }}
+                            >
+                              [*]
+                            </a>
+                          )}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {hasComments && chapterComments.length > 0 && (

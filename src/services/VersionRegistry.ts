@@ -3,7 +3,7 @@ import type { VersionMetadata } from '../models/VersionMetadata';
 export class VersionRegistry {
     private versions: VersionMetadata[] = [
         {
-            id: 'navarra_v7',
+            id: 'navarra_v9',
             name: 'Biblia de Navarra',
             shortName: 'Navarra',
             type: 'catholic',

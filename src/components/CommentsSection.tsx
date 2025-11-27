@@ -1,8 +1,10 @@
 import { makeReferencesClickable } from '../utils/bibleReferences';
 
 interface CommentItem {
-    verse: number;
+    verseStart: number;
+    verseEnd: number;
     text: string;
+    id: string;
 }
 
 interface Props {
@@ -31,12 +33,16 @@ export function CommentsSection({ comments }: Props) {
 
             <div className="bible-comments-list">
                 {comments.map((item) => (
-                    <div key={item.verse} id={`comment-${item.verse}`} className="bible-comment-card">
+                    <div key={item.id} id={item.id} className="bible-comment-card">
                         <div className="comment-header">
-                            <span className="comment-verse-ref">Versículo {item.verse}</span>
+                            <span className="comment-verse-ref">
+                                {item.verseStart === item.verseEnd
+                                    ? `Versículo ${item.verseStart}`
+                                    : `Versículos ${item.verseStart}-${item.verseEnd}`}
+                            </span>
                             <a
-                                href={`#verse-${item.verse}`}
-                                onClick={(e) => handleBackToVerse(item.verse, e)}
+                                href={`#verse-${item.verseStart}`}
+                                onClick={(e) => handleBackToVerse(item.verseStart, e)}
                                 className="back-to-verse-link"
                                 title="Volver al versículo"
                             >
