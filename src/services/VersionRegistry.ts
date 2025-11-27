@@ -21,7 +21,7 @@ export class VersionRegistry {
             shortName: 'Straubinger',
             type: 'catholic',
             description: 'Sagrada Biblia Platense (Mons. Juan Straubinger)',
-            fileSize: 2260325,
+            fileSize: 4125937,
             isExternal: false,
             url: '/bibles/straubinger.sqlite.gz',
             format: 'sqlite',

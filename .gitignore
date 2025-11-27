@@ -20,6 +20,8 @@ scripts/*.txt
 scripts/*.pdf
 scripts/*.doc
 scripts/*.docx
+scripts/*.html
+scripts/straubinger_full.json
 scripts/Sagrada_Biblia_Navarra_full.txt
 scripts/raw_books/
 scripts/*_extracted*.json
