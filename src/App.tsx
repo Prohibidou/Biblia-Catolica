@@ -110,7 +110,7 @@ function App() {
   const totalChapters = currentBookMeta ? currentBookMeta.chapters : 1;
 
   // Extract comments from verses (only for Navarra and Straubinger)
-  const hasComments = selectedVersion === 'navarra' || selectedVersion === 'straubinger';
+  const hasComments = selectedVersion.includes('navarra') || selectedVersion === 'straubinger';
   const chapterComments = hasComments
     ? verses.filter(v => v.comment).map(v => `${v.verse}. ${v.comment}`)
     : [];

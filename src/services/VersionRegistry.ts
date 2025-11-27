@@ -14,6 +14,19 @@ export class VersionRegistry {
             format: 'sqlite',
             available: true,
             copyright: 'EUNSA'
+        },
+        {
+            id: 'straubinger',
+            name: 'Biblia Straubinger',
+            shortName: 'Straubinger',
+            type: 'catholic',
+            description: 'Sagrada Biblia Platense (Mons. Juan Straubinger)',
+            fileSize: 2260325,
+            isExternal: false,
+            url: '/bibles/straubinger.sqlite.gz',
+            format: 'sqlite',
+            available: true,
+            copyright: 'Fundación Gratis Date'
         }
     ];
 
