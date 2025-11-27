@@ -514,6 +514,8 @@ button:active {
   background: var(--background-light);
 }
 
+
+
 ::-webkit-scrollbar-thumb {
   background: var(--accent-blue);
   border-radius: 5px;
@@ -521,4 +523,277 @@ button:active {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-blue);
+}
+
+.verse-block.highlighted {
+  background: var(--highlight-yellow);
+  padding: 0.75rem;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+  border-radius: 8px;
+  border-left: 6px solid var(--accent-orange);
+  box-shadow: var(--shadow-sm);
+}
+
+.verse-block.highlighted .verse-content {
+  font-weight: 500;
+}
+
+/* ============ DIVIDER ============ */
+.divider {
+  border: 0;
+  border-top: 2px solid var(--border-color);
+  margin: 3rem 0;
+}
+
+/* ============ COMMENTS SECTION ============ */
+.comments-section {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff4d6 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #ffe9a3;
+  box-shadow: var(--shadow-sm);
+}
+
+.comments-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: var(--primary-blue);
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Merriweather', serif;
+}
+
+.bible-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bible-comment-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border-left: 5px solid var(--accent-orange);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.bible-comment-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.comment-text {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+/* ============ BIBLE REFERENCE LINKS ============ */
+.bible-ref-link {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--accent-blue);
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.bible-ref-link:hover {
+  color: var(--accent-orange);
+  text-decoration: none;
+}
+
+/* ============ ERROR & LOADING STATES ============ */
+.error-message {
+  background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+  color: #c00;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 2rem auto;
+  border-radius: 12px;
+  border: 2px solid #fcc;
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
+  font-weight: 600;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-medium);
+  font-size: 1.2rem;
+}
+
+.loading-spinner::after {
+  content: '...';
+  display: inline-block;
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+
+  0%,
+  20% {
+    content: '.';
+  }
+
+  40% {
+    content: '..';
+  }
+
+  60%,
+  100% {
+    content: '...';
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-state p {
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state small {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .controls-panel {
+    top: 65px;
+    padding: 1rem;
+  }
+
+  .control-row {
+    flex-direction: column;
+  }
+
+  .control-row>div {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .chapter-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .verses-list {
+    padding: 1.5rem;
+  }
+
+  .verse-content {
+    font-size: 1.1rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============ CUSTOM SCROLLBAR ============ */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-blue);
+}
+
+/* ============ COMMENT NAVIGATION ============ */
+.comment-marker {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent-orange);
+  font-weight: bold;
+  margin-left: 0.25rem;
+  vertical-align: super;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-marker:hover {
+  color: var(--primary-blue);
+  transform: scale(1.1);
+}
+
+.highlight-temp {
+  animation: highlight-pulse 2s ease-out;
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background-color: var(--highlight-yellow);
+    transform: scale(1.02);
+  }
+
+  50% {
+    background-color: var(--highlight-yellow);
+    transform: scale(1.01);
+  }
+
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.comment-verse-ref {
+  font-weight: 700;
+  color: var(--primary-blue);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.back-to-verse-link {
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--background-light);
+  transition: all 0.2s ease;
+}
+
+.back-to-verse-link:hover {
+  background-color: var(--accent-blue);
+  color: white;
 }

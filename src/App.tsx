@@ -112,7 +112,9 @@ function App() {
   // Extract comments from verses (only for Navarra and Straubinger)
   const hasComments = selectedVersion.includes('navarra') || selectedVersion === 'straubinger';
   const chapterComments = hasComments
-    ? verses.filter(v => v.comment).map(v => `${v.verse}. ${v.comment}`)
+    ? verses
+      .filter(v => v.comment)
+      .map(v => ({ verse: v.verse, text: v.comment as string }))
     : [];
 
   // Scroll detection for hiding controls
@@ -222,17 +224,27 @@ function App() {
                 <div className="verses-list" ref={versesContainerRef}>
                   {verses.map((v, i) => (
                     <div key={i} id={`verse-${v.verse}`} className={selectedVerse === v.verse ? 'highlighted verse-block' : 'verse-block'}>
-                      {v.comment && (
-                        <div
-                          className="verse-comment"
-                          dangerouslySetInnerHTML={{
-                            __html: makeReferencesClickable(v.comment)
-                          }}
-                        ></div>
-                      )}
                       <p className="verse-content">
                         <sup className="verse-num">{v.verse}</sup>
                         {v.text}
+                        {v.comment && hasComments && (
+                          <a
+                            href={`#comment-${v.verse}`}
+                            className="comment-marker"
+                            title="Ver comentario"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const el = document.getElementById(`comment-${v.verse}`);
+                              if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                el.classList.add('highlight-temp');
+                                setTimeout(() => el.classList.remove('highlight-temp'), 2000);
+                              }
+                            }}
+                          >
+                            [*]
+                          </a>
+                        )}
                       </p>
                     </div>
                   ))}
